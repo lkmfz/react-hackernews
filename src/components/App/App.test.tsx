@@ -4,5 +4,5 @@ import App from './App';
 
 it('Renders without crashing', () => {
   const title = enzyme.shallow(<App />);
-  expect(title.find('.title').text()).toEqual('React HackerNews');
+  expect(title.find('.Title').text()).toEqual('React HackerNews');
 });

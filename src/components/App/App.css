@@ -1,11 +1,16 @@
-.title {
+.App {
   text-align: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.App > .Title {
   font-size: 40px;
 }
 
-.content {
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 15px;
+.App > .SearchBar {
+  font-size: 17px;
+}
+
+.App > .Content {
+  font-size: 12px;
 }
