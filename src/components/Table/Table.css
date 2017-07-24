@@ -28,7 +28,7 @@
 }
 
 .table-coloumn-large {
-  width: 40%;
+  width: 70%;
 }
 
 .table-coloumn-medium {
@@ -36,15 +36,16 @@
 }
 
 .table-coloumn-small {
-  width: 15%;
+  width: 10%;
 }
 
 .table-header > span { 
   overflow: hidden; 
   text-overflow: ellipsis; 
   padding: 0 5px;
-  font-size: 17px;
+  font-size: 20px;
   font-style: italic;
+  font-weight: bold;
 }
 
 .table-row > span { 
@@ -54,6 +55,15 @@
   font-size: 15px;
 }
 
-.table-row > a {
-  color: red;
+.link {
+  color: #fff;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.loader {
+  padding-top: 20px;
+  color: #fff;
+  font-size: 17px;
+  font-weight: medium;
 }
