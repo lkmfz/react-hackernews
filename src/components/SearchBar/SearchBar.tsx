@@ -8,17 +8,19 @@ interface SearchBarProps {
 
 const SearchBar = ({ onChangeText, onClickSearch }: SearchBarProps) => {
   return (
-    <form onSubmit={onClickSearch}>
-      <input
-        className="input"
-        type="text"
-        placeholder="Keywords.."
-        onChange={(event) => { onChangeText(event.target.value); }}
-      />
-      <button className= "search" type="submit">
-        🔎
+    <div className="SearchBar">
+      <form onSubmit={onClickSearch}>
+        <input
+          className="input"
+          type="text"
+          placeholder="Keywords.."
+          onChange={(event) => { onChangeText(event.target.value); }}
+        />
+        <button className="search" type="submit">
+          🔎
       </button>
-    </form>
+      </form>
+    </div>
   );
 };
 
