@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as constants from '../../constants';
+import API from '../../api/api';
 import * as Types from '../../types';
 import './App.css';
 import Header from '../Miscs/Header';
@@ -24,24 +24,30 @@ export default class App extends React.Component<AppProps, AppState> {
       results: null
     };
 
-    this.makeSearchRequest = this.makeSearchRequest.bind(this);
+    this.getFrontPageResults = this.getFrontPageResults.bind(this);
+    this.getSearchResults = this.getSearchResults.bind(this);
     this.configureResults = this.configureResults.bind(this);
     this.termOnChange = this.termOnChange.bind(this);
     this.searchByTerm = this.searchByTerm.bind(this);
   }
 
   componentDidMount() {
-    this.makeSearchRequest();
+    this.getFrontPageResults();
   }
+
   // Web Services
-  makeSearchRequest(searchTerm: string = constants.DEFAULT_QUERY) {
-    // url: 'https://hn.algolia.com/api/v1/search?query={searchTerm}&page={page}';
-    const query = `${constants.PARAM_SEARCH}${searchTerm}&${constants.PARAM_PAGE}${this.state.page}`;
-    const url = `${constants.BASE_URL}${constants.PATH_SEARCH}?${query}`;
-  
-    fetch(url)
-      .then(response => response.json())
-      .then(results => this.configureResults(results));
+  getFrontPageResults() {
+    API.getFrontPageResults(this.state.page, (results) => {
+      const list = results as Types.Results;
+      this.configureResults(list);
+    });
+  }
+
+  getSearchResults(searchTerm: string = '') {
+    API.getSearchResults(this.state.page, searchTerm, results => {
+      const list = results as Types.Results;
+      this.configureResults(list);
+    });
   }
 
   configureResults(results: Types.Results) {
@@ -58,7 +64,7 @@ export default class App extends React.Component<AppProps, AppState> {
     event.preventDefault();
 
     const { searchTerm } = this.state;
-    this.makeSearchRequest(searchTerm);
+    this.getSearchResults(searchTerm);
   }
 
   loadNextDataSet() {
