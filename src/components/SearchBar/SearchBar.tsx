@@ -18,7 +18,7 @@ const SearchBar = ({ onChangeText, onClickSearch }: SearchBarProps) => {
         />
         <button className="search" type="submit">
           🔎
-      </button>
+        </button>
       </form>
     </div>
   );

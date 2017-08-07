@@ -10,7 +10,9 @@ interface AppProps { }
 interface AppState {
   page: number;
   searchTerm: string;
-  results?: Types.Results | null;
+  isLoading: boolean;
+  isReachBottom: boolean;
+  hits: Types.Item[];
 }
 
 export default class App extends React.Component<AppProps, AppState> {
@@ -21,7 +23,9 @@ export default class App extends React.Component<AppProps, AppState> {
     this.state = {
       page: 0,
       searchTerm: '',
-      results: null
+      isLoading: true,
+      isReachBottom: false,
+      hits: [],
     };
 
     this.getFrontPageResults = this.getFrontPageResults.bind(this);
@@ -29,60 +33,92 @@ export default class App extends React.Component<AppProps, AppState> {
     this.configureResults = this.configureResults.bind(this);
     this.termOnChange = this.termOnChange.bind(this);
     this.searchByTerm = this.searchByTerm.bind(this);
+    this.loadNextDataSet = this.loadNextDataSet.bind(this);
   }
 
   componentDidMount() {
-    this.getFrontPageResults();
+    const { page } = this.state;
+    this.getFrontPageResults(page);
   }
 
   // Web Services
-  getFrontPageResults() {
-    API.getFrontPageResults(this.state.page, (results) => {
-      const list = results as Types.Results;
-      this.configureResults(list);
+  getFrontPageResults(page: number) {
+    API.getFrontPageResults(page, (results) => {
+      this.configureResults(results as Types.Results);
     });
   }
 
-  getSearchResults(searchTerm: string = '') {
-    API.getSearchResults(this.state.page, searchTerm, results => {
-      const list = results as Types.Results;
-      this.configureResults(list);
+  getSearchResults(page: number, searchTerm: string = '') {
+    API.getSearchResults(page, searchTerm, results => {
+      this.configureResults(results as Types.Results);
     });
   }
 
   configureResults(results: Types.Results) {
-    this.setState({
-      results: results
-    });
+    if (results.hits.length !== 0) {
+      this.setState((prevState) => {
+        return {
+          page: results.page,
+          isLoading: false,
+          hits: prevState.hits.concat(results.hits),
+        };
+      });
+    } else {
+      this.setState({
+        isReachBottom: true
+      });
+    }
   }
 
-  termOnChange(value: string) {
-    this.setState({ searchTerm: value });
+  termOnChange(term: string) {
+    this.setState({
+      searchTerm: term
+    });
   }
 
   searchByTerm(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const { searchTerm } = this.state;
-    this.getSearchResults(searchTerm);
+    const { searchTerm, page } = this.state;
+
+    if (searchTerm === '') {
+      this.getFrontPageResults(page);
+    } else {
+      this.getSearchResults(page, searchTerm);
+    }
   }
 
   loadNextDataSet() {
-    console.log('Load next page..');
+    const { page, searchTerm } = this.state;
+
+    this.setState({
+      isLoading: true
+    });
+
+    if (searchTerm === '') {
+      this.getFrontPageResults(page + 1);
+    } else {
+      this.getSearchResults(page + 1, searchTerm);
+    }
   }
 
   render() {
-    const { results } = this.state;
-  
+    console.log(this.state);
+
     return (
-      <div className="App">
-        <Header/>
+      <div className="App" >
+        <Header />
         <SearchBar
           onChangeText={this.termOnChange}
           onClickSearch={this.searchByTerm}
         />
-        <Content results={results} loadMoreOnClick={this.loadNextDataSet}/>
-      </div>
+        <Content 
+          hits={this.state.hits}
+          isLoading={this.state.isLoading}
+          isReachedBottom={this.state.isReachBottom}
+          loadMoreOnClick={this.loadNextDataSet}
+        />
+      </div >
     );
   }
 }

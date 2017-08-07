@@ -5,18 +5,19 @@ import TableHeader from './TableHeader';
 import TableRow from './TableRow';
 
 interface TableState { }
-interface TableProps { 
-  results: Types.Results;
+interface TableProps {
+  hits: Types.Item[];
 }
 
 export default class Table extends React.Component<TableProps, TableState> {
+
   render() {
-    const { results } = this.props;
+    const { hits } = this.props;
 
     return (
       <div className="table">
         <TableHeader />
-        {results.hits.map(item =>
+        {hits.map(item =>
           <TableRow key={item.objectID} item={item} />
         )}
       </div>

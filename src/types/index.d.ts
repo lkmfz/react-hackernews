@@ -9,4 +9,5 @@ export interface Item {
 
 export interface Results {
   hits: Array<Item>;
+  page: number;
 }

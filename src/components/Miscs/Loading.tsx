@@ -1,9 +1,13 @@
 import * as React from 'react';
 import './Loading.css';
 
-const Loading = () => {
+interface LoadingProps {
+  children: string;
+}
+
+const Loading = ({children}: LoadingProps) => {
   return (
-    <div className="loading">Loading...</div>
+    <div className="loading">{children}</div>
   );
 };
 
